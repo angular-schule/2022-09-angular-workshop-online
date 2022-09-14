@@ -1,4 +1,6 @@
-<br-book [book]="books[0]"></br-book>
+<br-book
+  *ngFor="let b of books"
+  [book]="b"></br-book>
 
 <div *ngIf="books.length === 0">
   Keine Bücher vorhanden
