@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { findIndex } from 'rxjs';
 import { Book } from '../shared/book';
 import { BookRatingService } from '../shared/book-rating.service';
 
