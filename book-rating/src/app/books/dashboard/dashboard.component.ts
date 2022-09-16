@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TrackByFunction } from '@angular/core';
 import { Book } from '../shared/book';
 import { BookRatingService } from '../shared/book-rating.service';
 
@@ -9,6 +9,10 @@ import { BookRatingService } from '../shared/book-rating.service';
 })
 export class DashboardComponent implements OnInit {
   books: Book[] = [];
+
+  trackBook: TrackByFunction<Book> = (index, item) => {
+    return item.isbn;
+  }
 
   constructor(private rs: BookRatingService) {
     this.books = [
@@ -56,5 +60,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
+
 
 }
