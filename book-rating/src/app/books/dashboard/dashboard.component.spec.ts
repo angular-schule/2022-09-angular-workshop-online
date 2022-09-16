@@ -1,17 +1,33 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Book } from '../shared/book';
+import { BookRatingService } from '../shared/book-rating.service';
 
 import { DashboardComponent } from './dashboard.component';
+
+/*class RatingMockService {
+  rateUp(b: Book) {
+    return b;
+  }
+}*/
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
   let fixture: ComponentFixture<DashboardComponent>;
+  let wasCalled = false;
 
   beforeEach(async () => {
+
+    const ratingMock: Partial<BookRatingService> = {
+      rateUp: (b: Book) => b,
+      // rateUp(b: Book) {return b;}
+    };
+
     await TestBed.configureTestingModule({
       declarations: [ DashboardComponent ],
-      imports: [],
       providers: [
-        // TODO: BookRatingService ersetzen
+        // BRS ersetzen: wenn Service angefordert wird,
+        // wird stattdessen ratingMock ausgeliefert
+        { provide: BookRatingService, useValue: ratingMock }
       ]
     })
     .compileComponents();
@@ -30,5 +46,20 @@ describe('DashboardComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call service.rateUp() for doRateUp()', () => {});
+  it('should call service.rateUp() for doRateUp()', () => {
+    // Arrange
+    // Service injecten (ist eigentlich der ratingMock)
+    const service = TestBed.inject(BookRatingService);
+    // spyOn(service, 'rateUp').and.returnValue({ isbn: '123' } as Book);
+    // spyOn(service, 'rateUp').and.callFake(b => b);
+    spyOn(service, 'rateUp').and.callThrough(); // callThrough: originale ersetzte Methode trotzdem verwenden
+
+    // Act
+    const book = { isbn: '123' } as Book; // Type Assertion
+    component.doRateUp(book);
+
+    // Assert
+    expect(service.rateUp).toHaveBeenCalledTimes(1);
+    expect(service.rateUp).toHaveBeenCalledWith(book);
+  });
 });
