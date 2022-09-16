@@ -20,7 +20,7 @@ export class BookComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('BOOK COMPONENT', this.book?.isbn);
+    // console.log('BOOK COMPONENT', this.book?.isbn);
   }
 
   doRateUp() {

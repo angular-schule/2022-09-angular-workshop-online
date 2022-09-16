@@ -1,5 +1,6 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
 import { BookComponent } from '../book/book.component';
 import { Book } from '../shared/book';
 import { BookRatingService } from '../shared/book-rating.service';
@@ -22,6 +23,11 @@ describe('DashboardComponent', () => {
     const ratingMock: Partial<BookRatingService> = {
       rateUp: (b: Book) => b,
       // rateUp(b: Book) {return b;}
+    };
+
+    // Ansatz
+    const storeMock = {
+      getAll: () => of([])
     };
 
     await TestBed.configureTestingModule({
