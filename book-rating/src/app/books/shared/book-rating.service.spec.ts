@@ -29,6 +29,7 @@ describe('BookRatingService', () => {
   it('should rate up a book by one', () => {
     // Arrange
     book.rating = 3;
+    // falls rating readonly: book = { ...book, rating: 3 };
 
     // Act
     const ratedBook = service.rateUp(book);
