@@ -1,6 +1,7 @@
 import { Component, OnInit, TrackByFunction } from '@angular/core';
 import { Book } from '../shared/book';
 import { BookRatingService } from '../shared/book-rating.service';
+import { BookStoreService } from '../shared/book-store.service';
 
 @Component({
   selector: 'br-dashboard',
@@ -14,23 +15,10 @@ export class DashboardComponent implements OnInit {
     return item.isbn;
   }
 
-  constructor(private rs: BookRatingService) {
-    this.books = [
-      {
-        isbn: '123',
-        title: 'Angular',
-        description: 'Grundlagen und mehr',
-        price: 36.9,
-        rating: 5
-      },
-      {
-        isbn: '456',
-        title: 'Vue.js',
-        description: 'Das grüne Framework',
-        price: 32.9,
-        rating: 3
-      }
-    ];
+  constructor(private rs: BookRatingService, private bs: BookStoreService) {
+    this.bs.getAll().subscribe(books => {
+      this.books = books;
+    });
   }
 
   doRateUp(book: Book) {
