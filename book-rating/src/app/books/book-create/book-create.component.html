@@ -1,4 +1,4 @@
-<form [formGroup]="bookForm">
+<form [formGroup]="bookForm" (ngSubmit)="submitForm()">
   <div class="form-group">
     <label for="isbnControl">ISBN</label>
     <input id="isbnControl" class="form-control" type="text" formControlName="isbn">
@@ -6,6 +6,11 @@
 
     <div class="feedback-error" *ngIf="hasError('isbn', 'required')">Die ISBN ist erforderlich.</div>
     <div class="feedback-error" *ngIf="hasError('isbn', 'minlength')">Die ISBN ist zu kurz.</div>
+
+    <!--
+      Ausblick:
+      <br-form-errors [control]="bookForm.get('isbn')" [messages]="{ minlength: 'ZU KURZ' }"></br-form-errors>
+    -->
 
     <pre>{{ bookForm.get('isbn')?.errors | json }}</pre>
   </div>
@@ -29,6 +34,9 @@
     <label>Rating</label>
     <input class="form-control" type="number" formControlName="rating">
   </div>
+
+  <button type="submit" class="btn btn-red" [disabled]="bookForm.invalid">Submit</button>
+
 </form>
 
 
