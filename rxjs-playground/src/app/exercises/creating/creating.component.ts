@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Observable, of, from, timer, interval, ReplaySubject, map, filter, Subscriber, Observer } from 'rxjs';
+import { Observable, of, from, timer, interval, ReplaySubject, map, filter, Subscriber, Observer, tap } from 'rxjs';
 
 @Component({
   selector: 'rxw-creating',
@@ -30,6 +30,7 @@ export class CreatingComponent {
 
     timer(0, 1000).pipe(
       map(e => e * 3),
+      tap(e => console.log(e)),
       filter(e => e % 2 === 0)
     ).subscribe({
       next: e => this.log(e),
@@ -42,7 +43,7 @@ export class CreatingComponent {
       sub.next('B');
       sub.next('C');
       sub.complete();
-    });
+    })
 
 
     /******************************/
