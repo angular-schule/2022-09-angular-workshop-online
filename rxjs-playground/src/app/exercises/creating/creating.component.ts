@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Observable, of, from, timer, interval, ReplaySubject, map, filter } from 'rxjs';
+import { Observable, of, from, timer, interval, ReplaySubject, map, filter, Subscriber, Observer } from 'rxjs';
 
 @Component({
   selector: 'rxw-creating',
@@ -22,7 +22,55 @@ export class CreatingComponent {
 
     /******************************/
 
-    
+    // of('A', 'B', 'C')
+    // from([1,2,3,4,5,6])
+    // interval(1000) // ---0---1---2---3---4---5--- ...
+    // timer(2000) // ------0|
+    // timer(2000, 1000) // ------0---1---2---3---4---5--- ...
+
+    timer(0, 1000).pipe(
+      map(e => e * 3),
+      filter(e => e % 2 === 0)
+    ).subscribe({
+      next: e => this.log(e),
+      complete: () => this.log('COMPLETE')
+    });
+
+    // Finnische Notation $ (André Staltz)
+    const myOf$ = new Observable(sub => {
+      sub.next('A');
+      sub.next('B');
+      sub.next('C');
+      sub.complete();
+    });
+
+
+    /******************************/
+
+    function producer(o: Subscriber<number>) {
+      const result = Math.random();
+      o.next(result);
+      o.next(5);
+      o.next(6);
+
+      setTimeout(() => o.next(20), 2000);
+      setTimeout(() => o.next(30), 4000);
+      setTimeout(() => o.complete(), 5000);
+      setTimeout(() => o.next(1000), 6000); // niemals sichtbar
+    }
+
+    const observer: Observer<number> = {
+      next: (data) => console.log(data),
+      error: (err) => console.error(err),
+      complete: () => console.log('FERTIG')
+    };
+
+    // producer(observer);
+
+    const myObservable$ = new Observable(producer);
+    // myObservable$.subscribe(observer);
+
+
     /******************************/
   }
 
