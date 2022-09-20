@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Book } from '../shared/book';
+import { BookStoreService } from '../shared/book-store.service';
 
 @Component({
   selector: 'br-book-create',
@@ -37,7 +40,7 @@ export class BookCreateComponent implements OnInit {
     }),
   });
 
-  constructor() { }
+  constructor(private router: Router, private bs: BookStoreService) { }
 
   isInvalid(controlName: string): boolean {
     const control = this.bookForm.get(controlName);
@@ -61,6 +64,28 @@ export class BookCreateComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  submitForm() {
+    // nur aktivierte Felder: .value
+    // alle Felder, auch deaktivierte: .getRawValue()
+
+    const newBook: Book = {
+      ...this.bookForm.getRawValue(),
+      // falls Eigenschaften fehlen:
+      // firstThumbnailUrl: '',
+      // authors: []
+    };
+
+    this.bs.create(newBook).subscribe({
+      next: receivedBook => {
+        this.router.navigate(['/books', receivedBook.isbn]);
+      },
+      error: err => {
+        console.log('FEHLER', err);
+      }
+    })
+
   }
 
 }

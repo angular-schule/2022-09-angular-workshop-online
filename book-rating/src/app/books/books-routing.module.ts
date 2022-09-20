@@ -6,6 +6,7 @@ import { BookSearchComponent } from './book-search/book-search.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
 const routes: Routes = [
+  // Alternative:
   // { path: '', redirectTo: 'list', pathMatch: 'full' },
   // { path: 'list', component: DashboardComponent },
   { path: '', component: DashboardComponent },
