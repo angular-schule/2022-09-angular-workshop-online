@@ -25,7 +25,7 @@ export class UnsubscribeComponent implements OnDestroy {
     const interval$ = timer(0, 1000);
 
     interval$.pipe(
-      takeUntil(this.destroy$)
+      takeUntil(this.destroy$) // Notifier
     ).subscribe({
       next: e => this.log(e),
       error: err => this.log('❌ ERROR: ' + err),

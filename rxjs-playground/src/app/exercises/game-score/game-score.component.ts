@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Subject, ReplaySubject, scan, reduce } from 'rxjs';
+import { Subject, ReplaySubject, scan, reduce, of } from 'rxjs';
 
 @Component({
   selector: 'rxw-game-score',
@@ -33,6 +33,30 @@ export class GameScoreComponent {
     ).subscribe(e => {
       this.currentScore = e;
     });
+
+
+    /******************************/
+
+
+    // Exkurs Redux
+    of(
+      'SETCITYLEIPZIG', // { type: 'SET CITY', data: 'Leipzig' }
+      'SETNAMEF',
+      'SETFRANG',
+      'SETCITYBERLIN',
+      'SETCITYHAMBURG'
+    ).pipe(
+      scan((acc, msg) => {
+        switch (msg) {
+          case 'SETCITYLEIPZIG': return { ...acc, city: 'Leipzig' };
+          case 'SETNAMEF': return { ...acc, name: 'Ferdinand' };
+          case 'SETFRANG': return { ...acc, framework: 'Angular' };
+          case 'SETCITYBERLIN': return { ...acc, city: 'Berlin' };
+          case 'SETCITYZUR': return { ...acc, city: 'Zürich' };
+          default: return acc;
+        }
+      }, { lang: 'DE' })
+    ).subscribe(e => console.log(e));
 
 
     /******************************/

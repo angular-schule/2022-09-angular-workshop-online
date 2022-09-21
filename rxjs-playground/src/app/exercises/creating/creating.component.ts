@@ -27,6 +27,7 @@ export class CreatingComponent {
     // interval(1000) // ---0---1---2---3---4---5--- ...
     // timer(2000) // ------0|
     // timer(2000, 1000) // ------0---1---2---3---4---5--- ...
+    // timer(0, 1000) // 0---1---2---3---4---5--- ...
 
     timer(0, 1000).pipe(
       map(e => e * 3),
@@ -55,12 +56,21 @@ export class CreatingComponent {
       o.next(6);
 
       setTimeout(() => o.next(20), 2000);
-      setTimeout(() => o.next(30), 4000);
+      const to = setTimeout(() => {
+        o.next(30);
+        console.log('TIMEOUT');
+      }, 4000);
       setTimeout(() => o.complete(), 5000);
       setTimeout(() => o.next(1000), 6000); // niemals sichtbar
+
+      // Teardown Logic
+      return () => {
+        console.log('Teardown');
+        clearTimeout(to);
+      };
     }
 
-    const observer: Observer<number> = {
+    const observer: Partial<Observer<number>> = {
       next: (data) => console.log(data),
       error: (err) => console.error(err),
       complete: () => console.log('FERTIG')
@@ -69,7 +79,11 @@ export class CreatingComponent {
     // producer(observer);
 
     const myObservable$ = new Observable(producer);
-    // myObservable$.subscribe(observer);
+    const sub = myObservable$.subscribe(observer);
+
+    setTimeout(() => {
+      sub.unsubscribe()
+    }, 3500);
 
 
     /******************************/
