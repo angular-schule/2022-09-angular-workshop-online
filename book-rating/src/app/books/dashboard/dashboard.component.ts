@@ -1,7 +1,11 @@
 import { Component, OnInit, TrackByFunction } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { map } from 'rxjs';
 import { Book } from '../shared/book';
 import { BookRatingService } from '../shared/book-rating.service';
 import { BookStoreService } from '../shared/book-store.service';
+import { loadBooks } from '../store/book.actions';
+import { selectBooks } from '../store/book.selectors';
 
 @Component({
   selector: 'br-dashboard',
@@ -10,13 +14,17 @@ import { BookStoreService } from '../shared/book-store.service';
 })
 export class DashboardComponent implements OnInit {
   books: Book[] = [];
+  books$ = this.store.select(selectBooks);
 
   trackBook: TrackByFunction<Book> = (index, item) => {
     return item.isbn;
   }
 
-  constructor(private rs: BookRatingService, private bs: BookStoreService) {
-    this.bs.getAll().subscribe(books => {
+  constructor(private rs: BookRatingService, private bs: BookStoreService, private store: Store) {
+    this.store.dispatch(loadBooks());
+
+    // AUSNAHME! Bitte normalerweise AsyncPipe verwenden
+    this.books$.subscribe(books => {
       this.books = books;
     });
   }
