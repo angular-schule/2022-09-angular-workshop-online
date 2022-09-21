@@ -80,6 +80,7 @@ export class BookCreateComponent implements OnInit {
     this.bs.create(newBook).subscribe({
       next: receivedBook => {
         this.router.navigate(['/books', receivedBook.isbn]);
+        // this.router.navigateByUrl()
       },
       error: err => {
         console.log('FEHLER', err);
